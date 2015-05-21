@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ajax的四部曲</title>
+</head>
+
+<body>
+<label>输入查询员工编号</label><input id="search_text" type="text"/>
+<button id="search">查询</button>
+<p id="result_search"></p>
+<h1>新建员工</h1>
+<label>输入员工编号</label><input id="number" type="text"/>
+<label>输入员工姓名</label><input id="name" type="text"/>
+<button id="save">保存</button>
+<p id="result_save"></p>
+
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.js"></script>
+<script>
+
+$(document).ready(function(){ 
+	$("#search").click(function(){ 
+		$.ajax({ 
+		    type: "GET", 	
+			url: "http://127.0.0.1:8080/xhr/server.php?number=" + $("#search_text").val(),
+			dataType: "json",
+			success: function(data) {
+				if (data.success) { 
+					$("#result_search").html(data.msg);
+				} else {
+					$("#result_search").html("出现错误：" + data.msg);
+				}  
+			},
+			error: function(jqXHR){     
+			   alert("发生错误：" + jqXHR.status);  
+			},     
+		});
+	});
+	
+	$("#save").click(function(){ 
+	$.ajax({ 
+		type: "POST", 	
+		url: "server.php",
+		data: {
+			name: $("#name").val(), 
+			number: $("#number").val()
+		},
+		dataType: "json",
+		success: function(data){
+			if (data.success) { 
+				$("#result_save").html(data.msg);
+			} else {
+				$("#result_save").html("出现错误：" + data.msg);
+			}  
+		},
+		error: function(jqXHR){     
+		   alert("发生错误：" + jqXHR.status);  
+		},     
+	});
+});
+
+});
+/*js  XHR*/
+/*document.getElementById("search").onclick = function() { 
+	//创建xmlhttprequest对象
+	var request = new XMLHttpRequest();
+	//调用open方法
+	request.open("GET", "server.php?number=" + document.getElementById("search_text").value);
+	//发送数据
+	request.send();
+	//对操作进行监听
+	request.onreadystatechange = function(){
+			if(request.readyState===4){
+				if(request.status===200){
+						document.getElementById("result_search").innerHTML = request.responseText;
+					}else{
+						alert("发生错误"+request.status);
+					}
+			}
+		}
+}
+document.getElementById("save").onclick = function() { 
+	//创建xmlhttprequest对象
+	var request = new XMLHttpRequest();
+	//调用open方法
+	request.open("POST", "server.php");
+	var data="name="+document.getElementById("number").value + "&number="+document.getElementById("name").value;
+	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	//发送数据
+	request.send(data);
+	//对操作进行监听
+	request.onreadystatechange = function(){
+			if(request.readyState===4){
+				if(request.status===200){
+						document.getElementById("result_save").innerHTML = request.responseText;
+					}else{
+						alert("发生错误"+request.status);
+					}
+			}
+		}
+
+}*/
+
+</script>
+</body>
+</html>
